@@ -1,16 +1,34 @@
-from tkinter import messagebox, Tk, Menu, Toplevel, Entry, Button, Text, SUNKEN
+from tkinter import (
+    messagebox,
+    Tk,
+    Menu,
+    Toplevel,
+    Entry,
+    Button,
+    Text,
+    SUNKEN,
+    RAISED,
+    GROOVE,
+    RIDGE,
+    FLAT,
+    StringVar,
+    OptionMenu,
+    font,
+    ttk,
+)
 
 root = Tk()
-
-root.geometry("700x400")
+root.geometry("700x370")
 root.title("Text Editor")
-
+root.configure(bg="light gray")
 menu_bar = Menu(root)
 
 fileMenu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="File", menu=fileMenu)
 editMenu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Edit", menu=editMenu)
+fontMenu = Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label="Font", menu=fontMenu)
 
 
 def FindMenu():
@@ -78,14 +96,34 @@ def ReplaceMenu():
     button.place(x=200, y=32)
 
 
+def font_style():
+    fonts = font.families()
+    font_str = StringVar()
+    font_str.set("calibri")
+
+    def font_set():
+        fontstyle = fontlist.get()
+        typeWindow.config(font=(f"{fontstyle}",))
+
+    popup = Toplevel(root)
+    popup.title("Font Style")
+    popup.geometry("300x100")
+    fontlist = ttk.Combobox(popup, textvariable=font_str, values=fonts)
+    fontlist.place(x=30, y=35)
+    button = Button(popup, text="Apply", command=font_set, padx=10)
+    button.place(x=200, y=32)
+
+
 fileMenu.add_command(label="Find", command=FindMenu)
 fileMenu.add_command(label="Replace", command=ReplaceMenu)
 editMenu.add_command(label="Copy")
 editMenu.add_command(label="Cut")
+fontMenu.add_command(label="Font Size")
+fontMenu.add_command(label="Font Style", command=font_style)
+fontMenu.add_command(label="Format")
 
-
-typeWindow = Text(root, relief=SUNKEN, height=19, width=84)
-typeWindow.place(x=10, y=50)
+typeWindow = Text(root, relief=GROOVE, height=19, width=90, font=("Calibri", 12))
+typeWindow.place(x=0, y=30)
 
 
 root.config(menu=menu_bar)
