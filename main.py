@@ -43,7 +43,7 @@ def FindMenu():
     entry = Entry(popup, width=25)
     entry.place(x=30, y=35)
     button = Button(popup, text="Find", command=find, padx=10)
-    button.place(x=200, y=35)
+    button.place(x=200, y=32)
 
 
 def ReplaceMenu():
@@ -75,7 +75,7 @@ def ReplaceMenu():
     entry = Entry(popup, width=25)
     entry.place(x=30, y=35)
     button = Button(popup, text="Find", command=replace, padx=10)
-    button.place(x=200, y=35)
+    button.place(x=200, y=32)
 
 
 fileMenu.add_command(label="Find", command=FindMenu)
