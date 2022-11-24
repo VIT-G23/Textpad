@@ -16,12 +16,15 @@ from tkinter import (
     font,
     ttk,
     Label,
+    BOTH,
 )
 
 root = Tk()
 root.geometry("700x370")
 root.title("Text Editor")
 root.configure(bg="light gray")
+font_str = StringVar()
+string = "Calibri"
 menu_bar = Menu(root)
 
 fileMenu = Menu(menu_bar, tearoff=0)
@@ -40,7 +43,7 @@ def FindMenu():
         if sub not in val:
             messagebox.showerror("Error", "No matching occurences found!")
 
-        l = 1
+        index = 1
         c = 0
         res = []
         text = val.split("\n")
@@ -50,22 +53,27 @@ def FindMenu():
             while j <= len(string):
                 if j == len(string):
                     if string[i:] == sub:
-                        res.append((str(l) + "." + str(i), str(l) + "." + str(j)))
+                        res.append(
+                            (str(index) + "." + str(i), str(index) + "." + str(j))
+                        )
                     break
                 else:
                     if string[i:j] == sub:
-                        res.append((str(l) + "." + str(i), str(l) + "." + str(j)))
+                        res.append(
+                            (str(index) + "." + str(i), str(index) + "." + str(j))
+                        )
                         i = j
                     else:
                         i += 1
                     j = i + len(sub)
-            l += 1
+            index += 1
 
         typeWindow.delete("1.0", "end-1c")
         typeWindow.insert("1.0", val)
         typeWindow.tag_configure("highlight", background="yellow", foreground="black")
         for pos in res:
             typeWindow.tag_add("highlight", pos[0], pos[1])
+        popup.destroy()
 
     popup = Toplevel(root)
     popup.title("Find")
@@ -85,7 +93,7 @@ def ReplaceMenu():
         if not sub or not val:
             messagebox.showerror("Error", "Please enter valid inputs!")
 
-        l = 1
+        index = 1
         c = 0
         res = []
         text = val.split("\n")
@@ -96,14 +104,18 @@ def ReplaceMenu():
             while j <= len(string):
                 if j == len(string):
                     if string[i:] == sub:
-                        res.append((str(l) + "." + str(i), str(l) + "." + str(j)))
+                        res.append(
+                            (str(index) + "." + str(i), str(index) + "." + str(j))
+                        )
                         val += subn
                     else:
                         val += string[i:]
                     break
                 else:
                     if string[i:j] == sub:
-                        res.append((str(l) + "." + str(i), str(l) + "." + str(j)))
+                        res.append(
+                            (str(index) + "." + str(i), str(index) + "." + str(j))
+                        )
                         val += subn
                         i = j
                     else:
@@ -111,12 +123,13 @@ def ReplaceMenu():
                         i += 1
                     j = i + len(sub)
             val += "\n"
-            l += 1
+            index += 1
         typeWindow.delete("1.0", "end-1c")
         typeWindow.insert("1.0", val)
         typeWindow.tag_configure("highlight", background="yellow", foreground="black")
         for pos in res:
             typeWindow.tag_add("highlight", pos[0], pos[1])
+        popup.destroy()
 
     popup = Toplevel(root)
     popup.title("Replace")
@@ -132,18 +145,23 @@ def ReplaceMenu():
 
 
 def font_style():
+    global font_str
     fonts = font.families()
-    font_str = StringVar()
-    font_str.set("calibri")
+    font_str.set(string)
 
     def font_set():
+        global font_str, string
         fontstyle = fontlist.get()
+        string = fontstyle
         typeWindow.config(font=(f"{fontstyle}",))
+        popup.destroy()
 
     popup = Toplevel(root)
     popup.title("Font Style")
     popup.geometry("300x100")
-    fontlist = ttk.Combobox(popup, textvariable=font_str, values=fonts)
+    fontlist = ttk.Combobox(popup, textvariable=font_str, state="readonly")
+    fontlist["values"] = fonts
+    fontlist.current(fonts.index(string))
     fontlist.place(x=30, y=35)
     button = Button(popup, text="Apply", command=font_set, padx=10)
     button.place(x=200, y=32)
@@ -158,8 +176,8 @@ fontMenu.add_command(label="Font Style", command=font_style)
 fontMenu.add_command(label="Format")
 
 typeWindow = Text(root, relief=GROOVE, height=19, width=90, font=("Calibri", 12))
-typeWindow.place(x=0, y=30)
-
+typeWindow.pack_propagate(False)
+typeWindow.pack(fill=BOTH, expand=True)
 
 root.config(menu=menu_bar)
 root.mainloop()
