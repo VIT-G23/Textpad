@@ -144,7 +144,7 @@ def ReplaceMenu():
     button.place(x=200, y=67)
 
 
-def font_style():
+def fontStyle():
     global font_str
     fonts = font.families()
     font_str.set(string)
@@ -172,7 +172,7 @@ fileMenu.add_command(label="Replace", command=ReplaceMenu)
 editMenu.add_command(label="Copy")
 editMenu.add_command(label="Cut")
 fontMenu.add_command(label="Font Size")
-fontMenu.add_command(label="Font Style", command=font_style)
+fontMenu.add_command(label="Font Style", command=fontStyle)
 fontMenu.add_command(label="Format")
 
 typeWindow = Text(root, relief=GROOVE, height=19, width=90, font=("Calibri", 12))
